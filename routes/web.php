@@ -15,23 +15,35 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/',function(){
 
-Route::get('/', function () {
+    return view('posts',[
+        'posts' => Post::all()
+    ]);
 
-    $files = File::files(resource_path("posts"));
-    $posts = [];
+});
+Route::get('posts/{post}',function($id){
+    return view('post',[
+        'post' => Post::FindOrFail($id)
+    ]);
+});
 
-    foreach ($files as $file) {
-        $document = YamlFrontMatter::parseFile($file);
+// Route::get('/', function () {
 
-        $posts[] = new Post(
-            $document->title,
-            $document->excerpt,
-            $document->date,    
-            $document->body()
+//     $files = File::files(resource_path("posts"));
+//     $posts = [];
 
-        );
-    }
+//     foreach ($files as $file) {
+//         $document = YamlFrontMatter::parseFile($file);
+
+//         $posts[] = new Post(
+//             $document->title,
+//             $document->excerpt,
+//             $document->date,    
+//             $document->body()
+
+//         );
+//     }
     // ddd($posts);    
     // $document = YamlFrontMatter::parseFile(
     //     resource_path('posts/my-first-post.html')
@@ -39,17 +51,17 @@ Route::get('/', function () {
 
     // ddd($document->date);
 
-    return view('posts', [
+//     return view('posts', [
 
-        // 'posts' => Post::all()
-        'posts' => $posts
+//         // 'posts' => Post::all()
+//         'posts' => $posts
 
-    ]);
-});
+//     ]);
+// });
 
 
-Route::get('posts/{post}', function ($slug) {
+// Route::get('posts/{post}', function ($slug) {
 
-    $post = Post::find($slug);
-    return view('post', ['post' => $post]);
-})->where('post', '[A-z_\-]+');
+//     $post = Post::find($slug);
+//     return view('post', ['post' => $post]);
+// })->where('post', '[A-z_\-]+');
