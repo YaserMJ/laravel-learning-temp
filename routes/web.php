@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
 use App\Post;
+use App\Category;
+use App\User;   
 use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 /*
@@ -18,16 +20,29 @@ use Spatie\YamlFrontMatter\YamlFrontMatter;
 Route::get('/',function(){
 
     return view('posts',[
-        'posts' => Post::all()
+        // 'posts' => Post::all()
+        'posts' => Post::latest('published_at')->with('category','author')->get()
     ]);
 
 });
-Route::get('posts/{post}',function($id){
+Route::get('posts/{post:slug}',function(Post $post){
     return view('post',[
-        'post' => Post::FindOrFail($id)
+        // 'post' => Post::FindOrFail($id)
+        'post' => $post
     ]);
 });
 
+Route::get('categories/{category:slug}', function(Category $category){
+    return view('post',[
+        'post' => $category->posts
+    ]);
+});
+
+Route::get('authors/{author}', function(User $author){
+    return view('post',[
+        'post' => $author->posts
+    ]);
+});
 // Route::get('/', function () {
 
 //     $files = File::files(resource_path("posts"));
